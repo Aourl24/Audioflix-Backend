@@ -4,6 +4,7 @@
     --tertiary-color: #F0FFF0;
 }
 
+
 @font-face {
     font-family:Poppins;
     src:url('Poppins-Regular.ttf')
@@ -39,6 +40,23 @@
     src:url('texgyreadventor-regular.otf')
 }
 
+a:hover{
+    color:var(--secondary-color);
+}
+
+a:focus{
+    color:var(--tertiary-color);
+}
+
+button:hover{
+    background-color:var(--secondary-color);
+}
+
+button:focus{
+    color:var(--tertiary-color);
+    background-color: ;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -65,6 +83,14 @@
 
 .border-10 {
     border: 10px solid black;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
 }
 
 .center {
@@ -111,7 +137,48 @@
     color: grey;
 }
 
-.color-p {
+
+.color-bg-red {
+    background-color: red;
+}
+
+.color-bg-blue {
+    background-color: blue;
+}
+
+.color-bg-yellow {
+    background-color: yellow;
+}
+
+.color-bg-purple {
+    background-color: purple;
+}
+
+.color-bg-green {
+    background-color: green;
+}
+
+.color-bg-pink {
+    background-color: pink;
+}
+
+.color-bg-orange {
+    background-color: orange;
+}
+
+.color-bg-brown {
+    color: brown;
+}
+
+.color-bg-silver {
+    color: silver;
+}
+
+.color-bg-grey {
+    color: grey;
+}
+
+.color-p{
     color: var(--primary-color)
 }
 
@@ -203,17 +270,38 @@
     display: none;
 }
 
+.show{
+    display:block;
+}
+
+.inline{
+    display:inline;
+}
+
+.inline-block{
+    display:inline-block;
+}
+
+.visible{
+    visibility:visible;
+} 
+.invisible{
+    visibility:hidden;
+}
 
 .pop {
     width: 100%;
 }
+
 .pop-top {
     top: 2%;
 }
+
 .pop-center {
     bottom: 50%;
     to: 50%;
 }
+
 .pop-bottom {
     bottom: 2%;
 }
@@ -223,13 +311,16 @@
     border: none !important
 }
 
+.no-decoration{
+    text-decoration: none;
+}
+
 .no-color-bg {
     background-color: none!important
 }
 
 .shadow {
-    box-shaow: 1px 1px 2px silver;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    box-shadow: 1px 1px 2px silver
 }
 
 .shadow-md {
@@ -252,24 +343,48 @@
     font-size: 14px;
 }
 
+.sz-15 {
+    font-size: 15px;
+}
+
 .sz-16 {
     font-size: 16px;
+}
+
+.sz-17 {
+    font-size: 17px;
 }
 
 .sz-18 {
     font-size: 18px;
 }
 
+.sz-19 {
+    font-size: 19px;
+}
+
 .sz-20 {
     font-size: 20px;
+}
+
+.sz-21 {
+    font-size: 21px;
 }
 
 .sz-22 {
     font-size: 22px;
 }
 
+.sz-23 {
+    font-size: 23px;
+}
+
 .sz-24 {
     font-size: 24px;
+}
+
+.sz-25 {
+    font-size: 25px;
 }
 
 .sz-26 {
@@ -318,6 +433,10 @@
 
 .sz-xs {
     font-size: 8px;
+}
+
+.img-cover{
+    object-fit: ;
 }
 
 .img-background img {
@@ -370,15 +489,15 @@
     height: 190px;
 }
 
-.contain img {
+.contain {
     object-fit: contain
 }
 
-.cover img {
+.cover {
     object-fit: cover
 }
 
-.fill img {
+.fill {
     object-fit: fill
 }
 

@@ -293,8 +293,8 @@ function MusicBox(props){
   return(
     <div class="">
     <div class="row sz-16 color-p p-2">
-    <div class='card  px-0 no-border color-bg-s'>
-     <div class="col color-white sz-18 p-2 bold "> {props.title ? props.title: ''}</div>
+    <div class='px-0 no-border'>
+     <div class="col sz-18 p-2 bold "> {props.title ? props.title: ''}</div>
     {props.coverArt ? <img class='card-img-top img-fluid cover ' src={props.coverArt } alt='myImage' style={{height:'200px'}} /> :''} 
     
     </div>
@@ -309,14 +309,14 @@ function MusicBox(props){
                         <img src={x.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> 
                         </div>
                         
-                        <div class="col btn-link no-decoration" onClick={()=>letPlay(x)} >
+                        <div class="col  no-decoration" onClick={()=>letPlay(x)} >
                         <div class="row"> 
                         <div class="col-12 sz-12 bold">{x.title} </div>
                         <div class="col-12 sz-12 color-grey" style={{color:'#d7'}}>{x.artist} </div>
                         </div>
                         </div>
                         <div class={`col hide audio${x.id}`} id={'spinner'+ x.id }><div class="spinner-grow sz-12"></div></div>
-                        <div class="col">{x.file} <audio controls index={e} id={"audio"+x.id}><source src={`https://127.0.0.1:8000'{x.file}`} type="audio/mpeg" /></audio> </div>
+                        <div class="col"><audio index={e} id={"audio"+x.id}><source src={x.file} type="audio/mpeg" /></audio> </div>
                         <div class="col-2"><i class="fas fa-ellipsis-v passive color-grey " onClick={()=>showOptionBar(x.id)} ></i>
                         <OptionBar items ={x}/>
                         </div>
@@ -329,6 +329,20 @@ function MusicBox(props){
     </div>
     </div>
   )
+}
+
+function PlayList(props){
+
+  return(
+      <div>
+          <div class="border card p-2 col-4">
+                <img src={props.items.cover_photo} class="img-fluid cover" style={{height:'150px',objectFit:'cover'}} />
+                <div class="row mt-2">
+                  <div class="col card-title sz-14">{props.items.name}</div>
+                </div>
+           </div>
+      </div>
+    )
 }
 
 // function HomePage(){

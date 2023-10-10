@@ -43,6 +43,25 @@ def musicHistoryApi(request,user=None):
 	serializer = MusicSerializer(history,many=True)
 	return Response(serializer.data)
 
+@api_view(['GET'])
+def likeSongApi(request,user=None):
+	if user is None:
+		likes = Music.objects.filter(like=getUser(request.user)).all()
+	else:
+		likes = Music.objects.filter(like=getUser(user)).all()
+	serializer = MusicSerializer(likes,many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def playListApi(request,user=None):
+	if user is None:
+		playlist = PlayList.objects.filter(profile=getUser(request.user))
+	else:
+		playlist = PlayList.objects.filter(profile=getUser(user))
+	serializer = PlayListSerializer(playlist,many=True)
+	return Response(serializer.data)
+
+
 def homeView(request):
 	return render(request,template("home.html"))
 
