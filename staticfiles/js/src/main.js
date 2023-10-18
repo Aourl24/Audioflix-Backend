@@ -146,28 +146,27 @@ React.useEffect(()=>{
   setPlaySign(false)
 },[playingSign])
 return(
-<div class="container-fluid color-bg-s position-fixed h-100 p-3 w-100" style={{top:'0',backgrund:`url(${props.items.coverPhoto})`,objectPosition:'',repeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000'}}>
+<div class="container-fluid color-bg-white position-fixed h-100 p-3 w-100" style={{top:'0',backgrund:`url(${props.items.coverPhoto})`,objectPosition:'',repeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000'}}>
 <br />
    <div class="row"> <div class="col-12 center"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'350px',height:'350px',objectFit:'cover'}}/> </div></div>
    <br />
-  <div class="row my-2"><div class="col-12 sz-18 bold color-white"> {props.items.title}</div>
+  <div class="row my-2"><div class="col-12 sz-18 bold color-p"> {props.items.title}</div>
    <div class="col color-grey sz-14"> {props.items.artist} </div>
    </div>
    
    <audio ref={currentAudioRef} ><source src={props.items.file} /></audio>
     <div class="row ">
-    <div class="col-12 p-2"><div class="color-bg-black bg-light rounded w-100" style={{height:'3px'}} ></div><div class="contair color-bg-p rounded position-relative" style={{height:'3px',marginTop:'-3px',width:audioPercent,backgroundClor:'white'}} ></div> </div>
+    <div class="col-12 p-2"><div class="color-bg-grey rounded w-100" style={{height:'3px',backgroundColor:'grey'}} ></div><div class="contair color-bg-p rounded position-relative" style={{height:'3px',marginTop:'-3px',width:audioPercent,backgroundClor:'white'}} ></div> </div>
     </div>
    <div class="row">
     <div class="col sz-12 color-grey" style={{textAlign:'left'}}>{currentTime} </div>
     <div class="col sz-12 color-grey" style={{textAlign:'right'}}>{audioDuration}</div>
     </div>
     <br />
-    <br />
     <div class="row justify-content-center align-items-center center">
-    <div class="col-3"><button class="btn btn-link no-decoration color-white  sz-18" onClick={()=>props.toggleFullScren()}> <i class="fas fa-compress"></i> </button></div>
+    <div class="col-3"><button class="btn btn-link no-decoration color-grey  sz-18" onClick={()=>props.toggleFullScren()}> <i class="fas fa-compress"></i> </button></div>
    <div class="col-3"><button onClick={()=>letPlay(props.items)} class="btn btn-link no-decoration sz-24 color-p" style={{ackgroundColor:'white',colr:'white',widh:'50px',heiht:'50px'}}> {playingSign ? <PauseSign />:<PlaySign />} </button> </div>
-   <div class="col-3"><button class="btn no-decoration color-dark-white sz-18 color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-white"></i></button></div>
+   <div class="col-3"><button class="btn no-decoration color-grey sz-18 color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-grey"></i></button></div>
    </div>
    <div class='row my-3'>
    <div class='col  center'>
@@ -183,7 +182,7 @@ return(
 function PlayerSmallBox(props){
 let {currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs, currentAudioRef, nextPlay, playingSign,setPlayingSign} = usePlayer()
 return(
-  <div id="fixed-bottom" class="fixed-bottom container-fluid p-2" style={{bottom:'60px',overflow:'hidden'}}>
+  <div id="fixed-bottom" class="fixed-bottom container-fluid p-2" style={{botom:'60px',overflow:'hidden'}}>
     <div class="row align-items-center rounded bg-lig color-bg-p p-2 m-1 sh dow color-white">
           <div class="col-md-1 col-3"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> </div>
           <div class="col bold btn-link no-decoration" onClick={props.onClick} >
@@ -273,6 +272,10 @@ function MusicBox(props){
     obj.classList.toggle('hide')
   }
   
+  let addToHistory = async (x)=>{
+    let request = await axios.get(`addtohistory/${x}`)
+  }
+
   React.useEffect(()=>{
     var audios = document.querySelectorAll('audio');
     audios.forEach((audio)=>{
@@ -316,7 +319,7 @@ function MusicBox(props){
                         </div>
                         </div>
                         <div class={`col hide audio${x.id}`} id={'spinner'+ x.id }><div class="spinner-grow sz-12"></div></div>
-                        <div class="col"><audio index={e} id={"audio"+x.id}><source src={x.file} type="audio/mpeg" /></audio> </div>
+                        <div class="col"><audio index={e} id={"audio"+x.id} onPlay={()=>addToHistory(x.id)}><source src={x.file} type="audio/mpeg" /></audio> </div>
                         <div class="col-2"><i class="fas fa-ellipsis-v passive color-grey " onClick={()=>showOptionBar(x.id)} ></i>
                         <OptionBar items ={x}/>
                         </div>

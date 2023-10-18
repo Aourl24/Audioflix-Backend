@@ -1,7 +1,7 @@
 function App(){
   let user = 'Awwal'
-  let [historyMusic,setHistoryMusic] = React.useState();
-  let [likeSongs,setLikeSongs] = React.useState();
+  let [historyMusic,setHistoryMusic] = React.useState([{}]);
+  let [likeSongs,setLikeSongs] = React.useState([{}]);
   let [playList,setPlayList] = React.useState([]);
 
   React.useEffect(

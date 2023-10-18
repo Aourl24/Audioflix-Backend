@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import Music, PlayList, MusicHistory, Profile
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .serializers import MusicSerializer,PlayListSerializer, MusicHistorySerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 def template(x):
@@ -32,17 +33,19 @@ def playListView(request):
 	serializer = PlayListSerializer(playlists,many=True)
 	return Response(serializer.data)
 
+@login_required
 @api_view(['GET'])
 def musicHistoryApi(request,user=None):
 	if user is None:
 		#history = MusicHistory.objects.filter(profile=getUser(request.user))
-		history = Music.objects.filter(music_history__profile=getUser(request.user))
+		history = Music.objects.filter(music_history__profile=getUser(request.user)).order_by('-music_history__time')[1:10]
 	else:
 		history = MusicHistory.objects.fileter(profile=getUser(user))
 
 	serializer = MusicSerializer(history,many=True)
 	return Response(serializer.data)
 
+@login_required
 @api_view(['GET'])
 def likeSongApi(request,user=None):
 	if user is None:
@@ -52,6 +55,7 @@ def likeSongApi(request,user=None):
 	serializer = MusicSerializer(likes,many=True)
 	return Response(serializer.data)
 
+@login_required
 @api_view(['GET'])
 def playListApi(request,user=None):
 	if user is None:
@@ -65,4 +69,22 @@ def playListApi(request,user=None):
 def homeView(request):
 	return render(request,template("home.html"))
 
-#@api_view(['GET'])
+def exploreView(request):
+	return render(request,template('explore.html'))
+
+def searchView(request):
+	return render(request,template('search.html'))
+
+@api_view(['GET'])	
+def searchApi(request,param):
+	music = Music.objects.filter(title__icontains=param)
+	serializer = MusicSerializer(music, many=True)
+	return Response(serializer.data)
+
+@api_view(['GET'])
+def addToHistoryView(request,id):
+	if request.user.is_authenticated:
+		music = Music.objects.get(id=id)
+		history = MusicHistory.objects.create(profile=getUser(request.user),music=music)
+		return HttpResponse('Added to history succesfully')
+

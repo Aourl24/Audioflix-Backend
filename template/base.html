@@ -30,20 +30,21 @@
 	<div class="navbar-brand">AudioFlix</div>
 	<div class="navbar-brand"></div>
 </div>
-<div class="row sz-24 bold">
-<div class="col-2">
+
+<div class="row sz-24 ">
+<div class="col-2 bold">
 	<br />
 	<div class="row my-2">
 		<div class="col"><a class="no-decoration" href="{%url 'HomeUrl'%}">Home</a> </div>
 	</div>
 	<div class="row my-2">
-		<div class="col">Explore</div>
+		<div class="col"><a class="no-decoration" href="{%url 'ExploreUrl' %}">Explore</a></div>
 	</div>
-	<div class="row my-2">
+	<div class="row my-2 hide">
 		<div class="col">Library</div>
 	</div>
 	<div class="row my-2">
-		<div class="col">Search</div>
+		<div class="col"><a class="no-decoration" href="{%url 'SearchUrl'%}">Search</a></div>
 	</div>
 </div>
 {%block content%}
