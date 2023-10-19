@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Music,Artist,Lyric,PlayList,MusicHistory,Profile
+from .models import Music,Artist,Lyric,PlayList,MusicHistory,Profile,Poster
 from django.contrib.auth.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -44,6 +44,10 @@ class MusicHistorySerializer(serializers.ModelSerializer):
 		model = MusicHistory
 		fields = "__all__"
 
+class PosterSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = Poster
+		fields = "__all__"
 	# def to_representation(self,instance):
 	# 	rep = super().to_representation(instance)
 	# 	rep['profile'] = instance.user.username

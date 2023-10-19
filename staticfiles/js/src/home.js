@@ -8,7 +8,7 @@ function App(){
     async ()=>{
       let response = await axios.get('/history')
     setHistoryMusic(response.data);
-    let response_data = await axios.get('/likesongs')
+    let response_data = await axios.get('/recentlylikesongs')
     setLikeSongs(response_data.data);
     let get_playlist = await axios.get('/playlist');
     console.log(get_playlist.data)
@@ -20,8 +20,7 @@ function App(){
   return(
     <PlayerContextProvider>
     <div>
-    <h3 class="sz-24">Welcome {user} </h3>
-  
+    
         <MusicBox title="Recent Played" items={historyMusic} />
         <hr />
         <MusicBox title="Like Songs" items={likeSongs} />

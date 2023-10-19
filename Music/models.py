@@ -22,6 +22,14 @@ class Artist(models.Model):
 	def __str__(self):
 		return self.name
 
+class Poster(models.Model):
+	title = models.CharField(max_length=100000)
+	img = models.ImageField(upload_to='poster_images')
+	date = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return self.name
+
 class Music(models.Model):
 	title = models.CharField(max_length=10000)
 	artist = models.ForeignKey(Artist,related_name='music',on_delete=models.CASCADE)

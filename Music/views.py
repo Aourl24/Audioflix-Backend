@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import Music, PlayList, MusicHistory, Profile
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
-from .serializers import MusicSerializer,PlayListSerializer, MusicHistorySerializer
+from .serializers import MusicSerializer,PlayListSerializer, MusicHistorySerializer,PosterSerializer
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,11 @@ def template(x):
 
 def getUser(x):
 	return Profile.objects.get(user=User.objects.get(username=x))
+
+# @api_view(['GET'])
+# def getUserView(request):
+# 	user =lambda x: if request.user else 'Anonymous'
+# 	return HttpResponse(user)
 
 @api_view(['GET'])
 def musicApiView(request):
@@ -88,3 +93,9 @@ def addToHistoryView(request,id):
 		history = MusicHistory.objects.create(profile=getUser(request.user),music=music)
 		return HttpResponse('Added to history succesfully')
 
+
+@api_view(['GET'])
+def posterView(request):
+	poster = Poster.objects.all()
+	serializer = PosterSerializer(many=True)
+	return Response(serializer.data)

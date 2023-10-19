@@ -1,17 +1,22 @@
 function App(){
 let [musicList, setMusicList] = React.useState([{}])
-
+let [playList,setPlayList] = React.useState([])
 React.useEffect(
 async()=>{
 let response = await axios.get('/musicapi')
-setMusicList(response.data)
+setMusicList(response.data);
+let response_two = await axios.get('/playlistapi')
+setPlayList(response_two.data)
 },[])
 return(
 	<PlayerContextProvider>
 	<div>
-		Explore All music Here
+		<div class="color-p">Explore All music Here</div>
 		<br />
 		<MusicBox items={musicList} />
+		<br />
+		<PlayList items={playList} />
+
 	</div>
 	</PlayerContextProvider>
 	)

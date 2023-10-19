@@ -23,28 +23,30 @@
 	--secondary-color:black;
 }
 </style>
-<body>
-<div class="container">
+<body class="bg-light">
 
-<div class="navbar">
-	<div class="navbar-brand">AudioFlix</div>
-	<div class="navbar-brand"></div>
+
+<div class="navbar shadow p-2 color-bg-p ">
+	<div class="navbar-brand sz-20 color-white">AudioFlix</div>
+	<div class="navbar-brand color-white">{{request.user}}</div>
 </div>
+<br />
 
+<div class="container-fluid">
 <div class="row sz-24 ">
-<div class="col-2 bold">
+<div class="col-1 bold h-100">
 	<br />
-	<div class="row my-2">
-		<div class="col"><a class="no-decoration" href="{%url 'HomeUrl'%}">Home</a> </div>
+	<div class="row my-2 p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-bd-p color-p p-2" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i></a> </div>
 	</div>
-	<div class="row my-2">
-		<div class="col"><a class="no-decoration" href="{%url 'ExploreUrl' %}">Explore</a></div>
+	<div class="row my-2 p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'ExploreUrl' %}"><i class="far fa-compass"></i></a></div>
 	</div>
 	<div class="row my-2 hide">
 		<div class="col">Library</div>
 	</div>
-	<div class="row my-2">
-		<div class="col"><a class="no-decoration" href="{%url 'SearchUrl'%}">Search</a></div>
+	<div class="row my-2 p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i></a></div>
 	</div>
 </div>
 {%block content%}
