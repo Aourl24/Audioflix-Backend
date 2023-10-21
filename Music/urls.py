@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import musicApiView, playListView, playListDetail, homeView ,musicHistoryApi, likeSongApi, playListApi, exploreView, searchView,searchApi,addToHistoryView
+from .views import musicApiView, playListView, playListDetail, homeView ,musicHistoryApi, likeSongApi, playListApi, exploreView, searchView,searchApi,addToHistoryView,posterView
 
 urlpatterns = [
 	path('musicapi',musicApiView,name="MusicApiUrl"),
@@ -12,5 +12,6 @@ urlpatterns = [
 	path('explore',exploreView,name="ExploreUrl"),
 	path('search',searchView,name="SearchUrl"),
 	path('searchapi/<str:param>',searchApi,name="SearchApi"),
-	path('addtohistory/<int:id>',addToHistoryView)
+	path('addtohistory/<int:id>',addToHistoryView),
+	path('poster',posterView)
 ]

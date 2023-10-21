@@ -26,15 +26,15 @@
 <body class="bg-light">
 
 
-<div class="navbar shadow p-2 color-bg-p ">
-	<div class="navbar-brand sz-20 color-white">AudioFlix</div>
-	<div class="navbar-brand color-white">{{request.user}}</div>
+<div class="navbar p-2">
+	<div class="navbar-brand sz-20 color-black bold">AudioFlix</div>
+	<div class="navbar-brand color-white hide" onClick="show()"><i class="fas fa-bars"></i></div>
 </div>
 <br />
 
 <div class="container-fluid">
 <div class="row sz-24 ">
-<div class="col-1 bold h-100">
+<div class="col-md-1 bold h-100 display-sm-none col-sm-3 " id="drop">
 	<br />
 	<div class="row my-2 p-2">
 		<div class="col"><a class="no-decoration rounded-circle color-bd-p color-p p-2" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i></a> </div>
@@ -49,12 +49,28 @@
 		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i></a></div>
 	</div>
 </div>
-{%block content%}
-<div class="col" id="main">
 
-
+<div class="navbar fixed-bottom color-bg-white display-md-none">
+<div class="p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-bd-p color-p p-2" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i></a> </div>
+	</div>
+	<div class="p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'ExploreUrl' %}"><i class="far fa-compass"></i></a></div>
+	</div>
+	<div class="my-2 hide">
+		<div class="col">Library</div>
+	</div>
+	<div class="p-2">
+		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i></a></div>
+	</div>
 </div>
+
+<div class="col" id="main">
+{%block content%}
+
 {%endblock%}
+</div>
+
 </div>
 </div>
 
@@ -68,6 +84,12 @@ const root = document.getElementById('main');
 ReactDOM.render(<App />,root)
 </script>
 {%endblock%}
+<script>
+function show(){
+	var doc = document.getElementById('drop')
+	doc.classList.toggle('display-sm-none')
+}
 
+</script>
 </body>
 </html>

@@ -146,11 +146,11 @@ React.useEffect(()=>{
   setPlaySign(false)
 },[playingSign])
 return(
-<div class="container-fluid color-bg-white position-fixed h-100 p-3 w-100" style={{top:'0',backgrund:`url(${props.items.coverPhoto})`,objectPosition:'',repeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000'}}>
+<div class="container-fluid bg-light position-fixed h-100 p-3 w-100" style={{top:'0',backgrund:`url(${props.items.coverPhoto})`,objectPosition:'',repeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000'}}>
 <br />
    <div class="row"> <div class="col-12 center"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'350px',height:'350px',objectFit:'cover'}}/> </div></div>
    <br />
-  <div class="row my-2"><div class="col-12 sz-18 bold color-p"> {props.items.title}</div>
+  <div class="row my-2"><div class="col-12 sz-20 bold color-p"> {props.items.title}</div>
    <div class="col color-grey sz-14"> {props.items.artist} </div>
    </div>
    
@@ -182,7 +182,7 @@ return(
 function PlayerSmallBox(props){
 let {currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs, currentAudioRef, nextPlay, playingSign,setPlayingSign} = usePlayer()
 return(
-  <div id="fixed-bottom" class="fixed-bottom container-fluid p-2" style={{botom:'60px',overflow:'hidden'}}>
+  <div id="fixed-bottom" class="fixed-bottom container-fluid p-2" style={{bottom:'60px',overflow:'hidden'}}>
     <div class="row align-items-center rounded bg-lig color-bg-p p-2 m-1 sh dow color-white">
           <div class="col-md-1 col-3"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> </div>
           <div class="col bold btn-link no-decoration" onClick={props.onClick} >
@@ -336,9 +336,12 @@ function MusicBox(props){
 
 function PlayList(props){
 
+if(props.items.length==0){
+  return null;
+}
   return(
       <div>
-          <div class="border card p-2 col-4">
+          <div class="border card p-2 col-md-4 col-sm">
                 <img src={props.items.cover_photo} class="img-fluid cover" style={{height:'150px',objectFit:'cover'}} />
                 <div class="row mt-2">
                   <div class="col card-title sz-14">{props.items.name}</div>
@@ -347,6 +350,7 @@ function PlayList(props){
       </div>
     )
 }
+
 
 // function HomePage(){
 //   let user = "Awwal"

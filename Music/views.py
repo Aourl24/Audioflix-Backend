@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Music, PlayList, MusicHistory, Profile
+from .models import Music, PlayList, MusicHistory, Profile, Poster
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from .serializers import MusicSerializer,PlayListSerializer, MusicHistorySerializer,PosterSerializer
@@ -97,5 +97,5 @@ def addToHistoryView(request,id):
 @api_view(['GET'])
 def posterView(request):
 	poster = Poster.objects.all()
-	serializer = PosterSerializer(many=True)
+	serializer = PosterSerializer(poster,many=True)
 	return Response(serializer.data)
