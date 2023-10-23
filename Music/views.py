@@ -99,3 +99,22 @@ def posterView(request):
 	poster = Poster.objects.all()
 	serializer = PosterSerializer(poster,many=True)
 	return Response(serializer.data)
+
+@login_required
+@api_view(['GET'])
+def likeSong(request,id,check_like=None):
+	music = Music.objects.get(id=id)
+	#music.like.add(request.user)
+	check = music.like.filter(id=request.user.profile.id).exists()
+
+	if check_like:
+		return Response(dict(like=check))
+		
+	if check:
+		music.like.add(request.user.profile.id)
+		check=True
+	else:
+		music.like.remove(request.user.profile.id)
+		check=False
+
+	return(Response(dict(like=check)))

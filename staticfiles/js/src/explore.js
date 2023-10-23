@@ -18,8 +18,6 @@ React.useEffect(()=>
 	{let time = setInterval(()=>{
 	//count >= poster.length ? setCount(0) : setCount(count+=1)
 	setCount((prevIndex)=>(prevIndex + 1) % poster.length)
-	console.log(count)
-	console.log('length is ' + poster.length )
 	},2*60*1000)
 	return () => clearInterval(time)
 } 

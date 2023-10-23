@@ -116,6 +116,31 @@ function SearchBar(props){
   )
 }
 
+
+function Like(props){
+let [color,setColor] = React.useState()
+let [trigger,setTrigger] = React.useState(null)
+
+React.useEffect(async()=>{
+let response = await axios.get(`checklike${props.id}/checklike`);
+setColor(response.data.like== true? 'color-p':'color-silver')
+},[])
+
+let likeSong =async()=>{
+  let response = await axios.get(`likesong${props.id}`);
+  console.log(response)
+setColor(response.data.like== true? 'color-p':'color-silver')
+
+}
+
+return(
+  <button class={`btn btn-link p-0 ${color}`} onClick={()=>likeSong()} >
+    <i class="fas fa-heart"></i>
+  </button>
+  )
+}
+
+
 const PlaySign = ()=> <i class="fas fa-play"></i>
 const PauseSign = ()=> <i class="fas fa-pause"></i>
 
@@ -146,7 +171,7 @@ React.useEffect(()=>{
   setPlaySign(false)
 },[playingSign])
 return(
-<div class="container-fluid bg-light position-fixed h-100 p-3 w-100" style={{top:'0',backgrund:`url(${props.items.coverPhoto})`,objectPosition:'',repeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000'}}>
+<div class="container-fluid bg-light position-fixed h-100 p-3 w-100" style={{top:'0',backgroud:`url(${props.items.cover_photo})`,objectPosition:'',reeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000',filter:'blur(0.1)'}}>
 <br />
    <div class="row"> <div class="col-12 center"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'350px',height:'350px',objectFit:'cover'}}/> </div></div>
    <br />
@@ -163,14 +188,28 @@ return(
     <div class="col sz-12 color-grey" style={{textAlign:'right'}}>{audioDuration}</div>
     </div>
     <br />
+
     <div class="row justify-content-center align-items-center center">
-    <div class="col-3"><button class="btn btn-link no-decoration color-grey  sz-18" onClick={()=>props.toggleFullScren()}> <i class="fas fa-compress"></i> </button></div>
-   <div class="col-3"><button onClick={()=>letPlay(props.items)} class="btn btn-link no-decoration sz-24 color-p" style={{ackgroundColor:'white',colr:'white',widh:'50px',heiht:'50px'}}> {playingSign ? <PauseSign />:<PlaySign />} </button> </div>
-   <div class="col-3"><button class="btn no-decoration color-grey sz-18 color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-grey"></i></button></div>
+    <div class="col">
+    <button class="btn btn-link no-decoration color-grey  sz-16" onClick={()=>props.toggleFullScren()}> <i class="fas fa-compress"></i> </button>
+    </div>
+    
+    <div class="col sz-16">
+    <a href={props.items.file} download class='no-decoration color-grey'><i class="fas fa-download"></i></a>
+    </div>
+
+   <div class="col-4">
+   <button onClick={()=>letPlay(props.items)} class="btn btn-link no-decoration sz-24 color-p" style={{ackgroundColor:'white',colr:'white',widh:'50px',heiht:'50px'}}> {playingSign ? <PauseSign />:<PlaySign />} </button> 
+   </div>
+   <div class="col">
+   <button class="btn no-decoration color-grey sz-16 color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-grey"></i></button>
+   </div>
+   <div class="col sz-16"><Like id={props.items.id}/></div>
+
    </div>
    <div class='row my-3'>
    <div class='col  center'>
-   <a href={props.items.file} download class='no-decoration color-white rounded color-bg-p p-2 sz-14'>Download this Music </a>
+   <a href={props.items.file} download class='no-decoration color-white rounded color-bg-p p-2 sz-14 hide'>Download this Music </a>
    </div>
    </div>
    
