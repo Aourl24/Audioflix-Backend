@@ -52,15 +52,15 @@ class PlayList(models.Model):
 	profile = models.ForeignKey(Profile,related_name='playlist',on_delete=models.CASCADE)
 	name = models.CharField('PlayList Name', max_length=1000000,default="")
 	music = models.ManyToManyField(Music,related_name="playlist",blank=True)
-	cover_photo = models.ImageField(null=True,blank=True)
+	#cover_photo = models.ImageField(null=True,blank=True)
 
 	def __str__(self):
 		return f'{self.profile} playlist '
 
 class MusicHistory(models.Model):
 	profile = models.ForeignKey(Profile,related_name='music_history',on_delete=models.CASCADE)
-	music = models.ForeignKey(Music,related_name="music_history",on_delete=models.CASCADE)
+	music = models.OneToOneField(Music,related_name="music_history",on_delete=models.CASCADE)
 	time = models.DateTimeField(auto_now_add=True)
 
 	def __str__(self):
-		return f"{self.profile} hsitory"
+		return f"{self.music.title} history"

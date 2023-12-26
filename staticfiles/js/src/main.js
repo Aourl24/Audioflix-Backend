@@ -1,16 +1,14 @@
-//import logo from './logo.svg';
-// import React from 'react';
-// import music from './music.mp3';
-// import asake from './asake.mp3';
-// import './css/bootstrap5/css/bootstrap.min.css';
-// import './css/fontawesome_5/css/all.min.css';
-// import './css/acss/acss.css';
-// import './App.css';
-// //import './css/acss/acss_dark.css';
-// import avatar from './avatar.jpeg';
-// import wife from './wifeMaterial.mp3';
-// import newmusic from './newmusic.jpg';
-// import axios from 'axios';
+const defautPlaying = {
+    "id": 0,
+    "artist": "Now Playing",
+    "title": "Now Playing",
+    "cover_photo": "/media/20231213_182247.jpg",
+    "file": "/media/spotifydown.com_-_Cornelia_Street.mp3",
+    "featured_artist": [],
+    "like": [
+        1
+    ]
+}
 
 const PlayerContext = React.createContext();
 
@@ -19,7 +17,7 @@ function PlayerContextProvider({children}){
 let audioRefs = React.useRef([])
 let currentAudioRef = React.useRef()
 let [currentTrack, setCurrentTrack] = React.useState(null);
-let [isPlaying,setIsPlaying] = React.useState(false);
+let [isPlaying,setIsPlaying] = React.useState(defautPlaying);
 let [audioDuration,setAudioDuration] = React.useState()
 let [currentTime,setCurrentTime] = React.useState()
 let [playingSign,setPlayingSign] = React.useState(false)
@@ -42,14 +40,11 @@ audio.play()
 audio.currentTime = audio.duration
 }
 
+
 const letPlay=(x,loop=false)=>{
     
-    //let audio = audioRefs.current[x.id]
     var audio = document.getElementById('audio' + x.id)
     var audios = document.querySelectorAll('audio')
-    if (audio == null){
-      
-    }
     
     let check = audio.paused
     
@@ -67,23 +62,16 @@ const letPlay=(x,loop=false)=>{
       setPlayingSign(false)
     }
 
-    //check ? audio.play() : audio.pause()
     setIsPlaying(x)
     audio.addEventListener('timeupdate',()=>setCurrentTime(readableAudioCurrentTime(audio)))
   
     setAudioDuration(readableAudioDuration(audio))
-   /* if (currentAudioRef.previous){
-    let prev = currentAudioRef.previous[x.id]
-    prev.pause()}
-    console.log(x)
-    //console.log(x)
-    /*let audio = document.getElementById(x.id);
-    console.log(x)
-    ;
-    console.log('tel ' + isPlaying)
-*/
   }
 
+React.useEffect(()=>{
+console.log('from the context ' + isPlaying)
+console.log('currentTrack ' + currentTrack)
+},[isPlaying])
 
 return(
       <PlayerContext.Provider value = {{currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs, audioDuration,setAudioDuration,currentTime,setCurrentTime, nextPlay,playingSign,setPlayingSign}} >
@@ -118,31 +106,35 @@ function SearchBar(props){
 
 
 function Like(props){
-let [color,setColor] = React.useState()
+let [like,setLike] = React.useState()
 let [trigger,setTrigger] = React.useState(null)
 
-React.useEffect(async()=>{
-let response = await axios.get(`checklike${props.id}/checklike`);
-setColor(response.data.like== true? 'color-p':'color-silver')
-},[])
+React.useEffect(()=>{
+let fetchData = async()=>{
+let response = await axios.get(`checklike${props.id}/checklike`)
+console.log(response.data.like)
+setLike(response.data.like);}
+fetchData()}
+,[])
 
-let likeSong =async()=>{
+let likeSong = async()=>{
+
   let response = await axios.get(`likesong${props.id}`);
-  console.log(response)
-setColor(response.data.like== true? 'color-p':'color-silver')
+  console.log(response.data.like)
+setLike(response.data.like)
 
 }
 
 return(
-  <button class={`btn btn-link p-0 ${color}`} onClick={()=>likeSong()} >
-    <i class="fas fa-heart"></i>
-  </button>
+  <div>
+    <i class={`fas fa-heart no-decoration ${like ? 'color-p': 'color-grey'}`} onClick={()=>likeSong()}></i>
+</div>
   )
 }
 
 
-const PlaySign = ()=> <i class="fas fa-play"></i>
-const PauseSign = ()=> <i class="fas fa-pause"></i>
+const PlaySign = ()=> <i class="fas fa-play-circle"></i>
+const PauseSign = ()=> <i class="fas fa-pause-circle"></i>
 
 
 function PlayerFullBox(props){
@@ -159,7 +151,6 @@ const toSeconds = (x) =>{
 }
 
 
-
 React.useEffect(()=>{
   var t = audioDuration ? toSeconds(audioDuration) : ''
   var c = currentTime ? toSeconds(currentTime) : ''
@@ -171,40 +162,52 @@ React.useEffect(()=>{
   setPlaySign(false)
 },[playingSign])
 return(
-<div class="container-fluid bg-light position-fixed h-100 p-3 w-100" style={{top:'0',backgroud:`url(${props.items.cover_photo})`,objectPosition:'',reeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000',filter:'blur(0.1)'}}>
-<br />
-   <div class="row"> <div class="col-12 center"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'350px',height:'350px',objectFit:'cover'}}/> </div></div>
+<div class="container-fluid position-fixed h-100 p-3 w-100 color-bg-white" style={{top:'0',backgroud:`url(${props.items.cover_photo})`,objectPosition:'',reeat:'no-repeat',lef:'0',right:'0',zIndex:'1000000',filter:'blur(0.1)'}}>
+
+<div class="row mb-3">
+<div class="col-1">
+    <button class="btn btn-link no-decoration color-black  sz-18" onClick={()=>props.toggleFullScren()}> <i class="fas fa-caret-down"></i> </button>
+  </div>
+<div class=" col center sz-14" style={{textAlign:'right'}}>Playing From <br /> <span class="bold">Audio-Flix</span></div>
+</div>
+   <div class="row"> <div class="col-12 center py-2" style={{background:`url(${props.items.cover_photo})`,repeat:'no-repeat'}}><img src={props.items.cover_photo} class="img-fluid rounded shadow-lg" style={{width:'350px',height:'350px',objectFit:'cover'}}/> </div></div>
    <br />
-  <div class="row my-2"><div class="col-12 sz-20 bold color-p"> {props.items.title}</div>
-   <div class="col color-grey sz-14"> {props.items.artist} </div>
+  <div class="row my-2 align-items-center">
+  <div class="col sz-20 bold color-p"> {props.items.title}
+   <div class="color-black sz-14"> {props.items.artist} </div>
    </div>
-   
+   <div class="col-2 sz-18" style={{textAlign:'right'}}> <Like id={props.items.id}/> </div>
+   </div>
+  
+  <br class=""/>
+  <br class="display-md-none" />
+  <br class="display-md-none" /> 
    <audio ref={currentAudioRef} ><source src={props.items.file} /></audio>
     <div class="row ">
-    <div class="col-12 p-2"><div class="color-bg-grey rounded w-100" style={{height:'3px',backgroundColor:'grey'}} ></div><div class="contair color-bg-p rounded position-relative" style={{height:'3px',marginTop:'-3px',width:audioPercent,backgroundClor:'white'}} ></div> </div>
+    <div class="col-12 p-2"><div class="color-bg-grey rounded w-100" style={{height:'3px',backgroundColor:'silver'}} ></div><div class="contair color-bg-p rounded position-relative" style={{height:'3px',marginTop:'-3px',width:audioPercent,backgroundClor:'white',borderRigh:'px solid blue'}} ></div> </div>
     </div>
    <div class="row">
     <div class="col sz-12 color-grey" style={{textAlign:'left'}}>{currentTime} </div>
     <div class="col sz-12 color-grey" style={{textAlign:'right'}}>{audioDuration}</div>
     </div>
-    <br />
-
-    <div class="row justify-content-center align-items-center center">
-    <div class="col">
-    <button class="btn btn-link no-decoration color-grey  sz-16" onClick={()=>props.toggleFullScren()}> <i class="fas fa-compress"></i> </button>
-    </div>
     
-    <div class="col sz-16">
-    <a href={props.items.file} download class='no-decoration color-grey'><i class="fas fa-download"></i></a>
+<br class="display-md-none" />
+<br class="display-md-none" /> 
+    <div class="row justify-content-center align-items-center center">
+    
+    
+    <div class="col sz-18">
+    <a href={props.items.file} download class='no-decoration color-p'><i class="fas fa-download"></i></a>
     </div>
 
-   <div class="col-4">
-   <button onClick={()=>letPlay(props.items)} class="btn btn-link no-decoration sz-24 color-p" style={{ackgroundColor:'white',colr:'white',widh:'50px',heiht:'50px'}}> {playingSign ? <PauseSign />:<PlaySign />} </button> 
-   </div>
    <div class="col">
-   <button class="btn no-decoration color-grey sz-16 color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-grey"></i></button>
+   <button onClick={()=>letPlay(props.items)} class="no-decoration sz-36 color-p btn" style={{ackgroundColor:'white',colr:'white',widh:'50px',heiht:'50px',fontSize:'70px'}}> {playingSign ? <PauseSign />:<PlaySign />} </button> 
    </div>
-   <div class="col sz-16"><Like id={props.items.id}/></div>
+
+   <div class="col">
+   <button class="btn no-decoration color-grey sz-18 color-p" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward color-black"></i></button>
+   </div>
+   
 
    </div>
    <div class='row my-3'>
@@ -212,6 +215,9 @@ return(
    <a href={props.items.file} download class='no-decoration color-white rounded color-bg-p p-2 sz-14 hide'>Download this Music </a>
    </div>
    </div>
+   <div class="row hide">
+      <div class="col"> Add to Playlist </div>
+    </div>
    
 </div>
 
@@ -219,23 +225,23 @@ return(
 }
 
 function PlayerSmallBox(props){
-let {currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs, currentAudioRef, nextPlay, playingSign,setPlayingSign} = usePlayer()
+let {playingSign,currentAudioRef,letPlay,nextPlay,isPlaying,setIsPlaying} = usePlayer()
 return(
-  <div id="fixed-bottom" class="fixed-bottom container-fluid p-2" style={{bottom:'60px',overflow:'hidden'}}>
-    <div class="row align-items-center rounded bg-lig color-bg-p p-2 m-1 sh dow color-white">
-          <div class="col-md-1 col-3"><img src={props.items.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> </div>
-          <div class="col bold btn-link no-decoration" onClick={props.onClick} >
-          <div class="row"><div class="col-12 sz-14">{props.items.title} </div>
-          <div class="col-12 color-silver sz-12">{props.items.artist} </div>
+  <div id="fixed-bottom" class="fixed-bottom container-fluid p-0 playerBottom" style={{bottm:'60px',overflow:'hidden'}}>
+    <div class="row align-items-center rounded bg-lig color-bg-p p-1 m-1 sh dow color-white">
+          <div class="col-md-1 col-3"><img src={props.media.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> </div>
+          <div class="col btn-link no-decoration" onClick={props.onClick} >
+          <div class="row"><div class="col-12 sz-14" style={{cursor:'pointer'}}>{props.media.title} </div>
+          <div class="col-12 color-silver sz-12">{props.media.artist} </div>
           </div>
           </div>
 
-          <div class="col-2 col-md-1"><button onClick={()=>letPlay(props.items)} class="btn btn-link no-decoration color-dark-white sz-md-24 color-white"> {playingSign ? <PauseSign />:<PlaySign />} </button> </div>
-          <div class="col-2 display-sm-none col-md-1"><button class="btn no-decoration color-dark-white color-white" onClick={()=>nextPlay(props.items)}><i class="fas fa-step-forward"></i></button></div>
+          <div class="col-2 col-md-1"><button onClick={()=>letPlay(props.media)} class="btn btn-link no-decoration color-dark-white sz-m-24 color-white sz-36"> {playingSign ? <PauseSign />:<PlaySign />} </button> </div>
+          <div class="col-2 display-sm-none col-md-1"><button class="btn no-decoration color-dark-white color-white" onClick={()=>nextPlay(props.media)}><i class="fas fa-step-forward"></i></button></div>
           <div class="col-2 col-md-1"><button class="btn no-decoration color-dark-white color-white" onClick={()=>props.toggleFullScren()}> <i class="fas fa-expand"></i> </button> </div>
           
         <div class="row">
-          <div class="col"><audio ref={currentAudioRef} ><source src={props.items.file} /></audio> </div>
+          <div class="col"><audio ref={currentAudioRef} ><source src={props.media.file} /></audio> </div>
         </div>
     </div>
   </div>
@@ -243,9 +249,10 @@ return(
 }
 
 function Player(props){
-let playerItems = props.Items
 let [fullscreen,setFullScreen] = React.useState(false) 
-let {playingSign,setPlayinSign} = usePlayer()
+let {isPlaying , setIsPlaying, playingSign,letPlay, currentTrack} = React.useContext(PlayerContext)
+let [music,setMusic] = React.useState(isPlaying)
+
 let player = React.useRef()
 
 const changeMode = () => {
@@ -260,10 +267,16 @@ if(playingSign){
 }
 },[playingSign])
 
+React.useEffect(()=>{
+
+},[isPlaying,letPlay])
+
 return(
-    <div class="hide" ref={player}>
-        {fullscreen ? <PlayerFullBox items={props.Items} toggleFullScren={()=>changeMode()} /> : <PlayerSmallBox items={props.Items} toggleFullScren={()=>changeMode()}/> }
+  
+    <div class="" ref={player}>
+        {fullscreen ? <PlayerFullBox toggleFullScren={()=>changeMode()} items={props.items} /> : <PlayerSmallBox toggleFullScren={()=>changeMode()} media={props.items && props.items} /> }
     </div>
+   
 )
 
 }
@@ -291,29 +304,48 @@ function SideBar(props){
 
 
 function OptionBar(props){
+  // getPlayListName = async ()=>{
+  //     let response = await axios.get('playlistapi')
+
+  // }
+React.useEffect(()=>{
+  let addtoPlaylist = document.getElementById(`direct${props.items.id}`)
+  htmx.process(addtoPlaylist)
+  //htmx.process(addtoPlaylist,{'hx-get':`addtoplaylist/${props.items.id}`,'hx-target':`#${props.items.id}optionbar`,'hx-swap':'innerHTML'})
+},[])
+
   return(
-    <div id={`${props.items.id}optionbar`} class='alert col-4  position-absolute bg-light rounded p-2 hide' style={{lft:'0',right:'0'}}>
-      <a href={props.items.url} class='color-p no-decoration sz-12' download>Download </a>
+    <div id={`${props.items.id}optionbar`} class='alert col-4  position-absolute' style={{lft:'0',right:'0'}}>
+    <div id={`pop${props.items.id}`} class="bg-light shadow rounded p-2 popup">
+    <div class="row mb-2">
+      <a href={props.items.url} class='color-black col no-decoration' download>Download </a>
+    </div>
+      <div class="row mb-2">
+      <a class="col no-decoration" id={`direct${props.items.id}`} href={`addtoplaylist/${props.items.id}`} hx-get={`addtoplaylist/${props.items.id}`} hx-trigger="click" hx-target={`#pop${props.items.id}`} hx-swap="beforeend"> Add to My PlayList
+      </a>
+      </div>
+    </div>
     </div>
     )
 }
 
 
 function MusicBox(props){
-  let dummy = [{title:'Yoga',artist:'Asake',size:'3.40mb',file:'',cover_photo:'',id:1},{title:'Pallazo',artist:'Asake',size:'3.40mb',file:'',cover_photo:'',id:2}]
-  //let dummy = {title:'',artist:'',url:'',coverPhoto:''}
-  let musicList =props.items ? props.items : dummy 
-  //let [nowPlaying,setNowPlaying]= React.useState(dummy) 
-  let {currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs} = usePlayer()
   
-  const showOptionBar = (x) =>{
-    let obj = document.getElementById(`${x}optionbar`);
-    obj.classList.toggle('hide')
+  
+  let musicList =props.items ? props.items : []  
+  let {currentTrack, setCurrentTrack, isPlaying , setIsPlaying, letPlay, audioRefs} = usePlayer()
+  let [menu,setMenu] = React.useState(props.items.map((x)=>({id:x.id,status:true})))
+
+  const showOptionBar = (x,e) =>{
+    setMenu(menu.map((i)=>i.id=== x ? {...i,status:i.status ? false:true} :{...i,status:true} ))
   }
   
   let addToHistory = async (x)=>{
     let request = await axios.get(`addtohistory/${x}`)
   }
+
+  
 
   React.useEffect(()=>{
     var audios = document.querySelectorAll('audio');
@@ -324,8 +356,12 @@ function MusicBox(props){
         if (nextSong == null){
           nextSong = musicList[0]
         }
-        audio.addEventListener('play',()=>{document.querySelector(`.${audio.id}`).classList.add('show')});
-        audio.addEventListener('pause',()=>{document.querySelector(`.${audio.id}`).classList.remove('show')});
+        audio.addEventListener('play',()=>{
+          document.querySelector(`.${audio.id}`).classList.add('show')
+        });
+        audio.addEventListener('pause',()=>{
+          document.querySelector(`.${audio.id}`).classList.remove('show')
+        });
         audio.addEventListener('ended',()=>{letPlay(nextSong,true)});
           //letPlay(musicList[index+1])
         })
@@ -351,150 +387,86 @@ function MusicBox(props){
                         <img src={x.cover_photo} class="img-fluid rounded" style={{width:'50px',height:'50px',objectFit:'cover'}}/> 
                         </div>
                         
-                        <div class="col  no-decoration" onClick={()=>letPlay(x)} >
+                        <div class="col color-black no-decoration" onClick={()=>letPlay(x)} >
                         <div class="row"> 
-                        <div class="col-12 sz-12 bold">{x.title} </div>
-                        <div class="col-12 sz-12 color-grey" style={{color:'#d7'}}>{x.artist} </div>
+                        <a class="col-12 sz-12 bold no-decoration color-black" style={{cursor:'pointer'}}>{x.title.slice(0,25)} </a>
+                        <a class="col-12 sz-12 color-grey no-decoration" style={{color:'#d7'}}>{x.artist} </a>
                         </div>
                         </div>
-                        <div class={`col hide audio${x.id}`} id={'spinner'+ x.id }><div class="spinner-grow sz-12"></div></div>
-                        <div class="col"><audio index={e} id={"audio"+x.id} onPlay={()=>addToHistory(x.id)}><source src={x.file} type="audio/mpeg" /></audio> </div>
-                        <div class="col-2"><i class="fas fa-ellipsis-v passive color-grey " onClick={()=>showOptionBar(x.id)} ></i>
-                        <OptionBar items ={x}/>
+                        <div class={`col-1 hide audio${x.id}`} id={'spinner'+ x.id }><div class="spinner-grow position-absolut" style={{fontSize:'2px'}}></div></div>
+                        <div class="col">
+                        <audio index={e} id={"audio"+x.id} onPlay={()=>addToHistory(x.id)}><source src={x.file} type="audio/mpeg" /></audio> 
+                        </div>
+                        <div class="col-2"> <i class={menu[e].status ? "fas fa-ellipsis-v passive color-grey":"fas fa-times-circle color-red"} onClick={()=>showOptionBar(x.id,e)}></i>
+                          {menu[e].status ? '': <OptionBar items ={x}/>}                  
+                        
                         </div>
                     </div>
+
                     </div>
                 )
             })
           }
-          <Player Items={isPlaying} onClick={letPlay} /> 
+           
     </div>
+    <Player items={isPlaying} />    
     </div>
   )
 }
 
 function PlayList(props){
-
 if(props.items.length==0){
   return null;
 }
   return(
       <div>
-          <div class="border card p-2 col-md-4 col-sm">
-                <img src={props.items.cover_photo} class="img-fluid cover" style={{height:'150px',objectFit:'cover'}} />
-                <div class="row mt-2">
-                  <div class="col card-title sz-14">{props.items.name}</div>
+        <div class=" no-decoration no-border">
+                {props.items.music.length !=0 ? 
+                (<div class="row m-1 mx-md-2 rounded">
+                  {props.items.music.slice(0,1).map((x)=>{
+                    return(
+                      
+                          <img src={x.cover_photo} class="col ig-fluid w-100 m-0 p-0" style={{height:'200px',objectFit:'cover'}} />
+                    
+                  )})}
+                </div>)
+                :
+                (
+                  <div class="row m-1 border rounded">
+                    <div class="col w-100 center d-flex align-items-center justify-content-center p-0 m-0" style={{height:'200px',objectFit:'cover'}}><i class="fas fa-music sz-24"></i></div>
+                  </div>
+                  )
+              }
+                <div class="row p-2" >
+                <a  class="no-decoration" href={"/playlistdetail"+props.items.id}>
+                  <div class="col card-title sz-18 px-md-3 mx-md-2" style={{marginTop:'-50px'}}>
+                   <span class="color-bg-p color-white rounded p-2">{props.items.name} </span>
+                  </div>
+                </a>
                 </div>
            </div>
       </div>
+      
     )
 }
 
-
-// function HomePage(){
-//   let user = "Awwal"
-//   return(
-//       <div>
-//         <h3>Welcome {user} </h3>
-
-//         <div> Your Like Songs </div>
-
-//       </div>
-//     )
-// }
+function toTitle(x){
+  let firstLetter = x.slice(0,1)
+  let otherLetter = x.slice(1)
+  console.log(firstLetter)
+  console.log(otherLetter)
+  return`${firstLetter.toUpperCase()}${otherLetter.toLowerCase()}`
+}
 
 
-// function Explore() {
+
+
+
+function Media(){
   
-//   //let [nowPlaying, setNowPlaying] = React.useState(null)
-//   //let [musicList, setMusicList] = React.useState(dummy)
 
-// var myMusic = [{title:'Yoga',album:'',artist:'Asake',size:'3.40mb',file:asake,cover_photo:avatar,id:5},{title:'Pallazo',artist:'Asake',size:'3.40mb',file:music,cover_photo:avatar,id:6},{title:'Wife Material',artist:'Asake',size:'3.40mb',file:wife,cover_photo:avatar,id:7}]
+  return(
+<PlayerContextProvider><Player /></PlayerContextProvider>
+    )
+}
 
-// var [musics,setMusic] = React.useState([{title:'',artist:'',size:'',url:'',coverPhoto:'',id:''}])
-// const options = {
-//   method: 'GET',
-//   url: 'https://spotify23.p.rapidapi.com/tracks/',
-//   params: {
-//     ids: '4WNcduiCmDNfmTEz7JvmLv'
-//   },
-//   headers: {
-//     'X-RapidAPI-Key': 'b1539cf82fmsh9cecf507142d6a1p18f910jsn37b5e7b8bbd1',
-//     'X-RapidAPI-Host': 'spotify23.p.rapidapi.com'
-//   }
-// };
-// const fetchData = async () => {
-//   try {
-//     const response = await axios.get('http://127.0.0.1:8000/musicapi?format=json');
-//     console.log(response.data)
-//     setMusic(response.data);
-//     // Rest of your code...
-//   } catch (error) {
-//     console.log('error occured')
-//     // Handle the error here
-//   }
-// };
-
-// React.useEffect(() => {
-//     fetchData();
-//   }, []); // The empty array [] ensures this effect runs only once when the component mounts
-
- 
-//   return (
-//     <PlayerContextProvider>
-//     <div className="container-fluid font-apple color-bg-s">
-//       <header className="navbar sz-16 p-1 color-p stcky-top color-bg-s postion-relative " style={{backgrondColor:'#C0C0C0',left:'0',rigt:'0'}}>
-//               <div class="navbar-brand bold color-p sz-16 font-great"><i class='fas fa-music'></i> AudioFlix </div>
-//               <div class="navbar-brand color-black display-md-none"> <SearchBar /></div>
-//       </header> 
-      
-//         <div class="row">
-//         <div class="col-2 display-sm-none">
-//         <SearchBar />
-//         <SideBar />
-//         </div>
-//         <div class="col">
-//         <div class='g-light'>
-//         <MusicBox items={musics}  background coverAt={newmusic} title="Api Music"/>
-//         </div>
-//         <hr />
-//         <MusicBox items={myMusic} title="Trending Song"/>
-//         <hr />
-//         <MusicBox />
-//         </div>
-
-//         </div>
-//                 <br />
-//         <br />
-//         <br />
-//         <nav class='nav navbar fixed-bottom color-bg-t  color-white sz-12 justify-content-center'>
-//         <div class='navbar-brand col-5 color-white sz-12 center'>
-//         <div class='col-12'>
-//         <i class='fas fa-home sz-16'></i>
-//        </div>
-//        <div class='col-12'>
-//         Home
-//         </div>
-//         </div>
-//         <div class='navbar-brand col-5 center color-white sz-12'> 
-//         <div class='col-12'><i class='fas fa-music'></i> </div>
-//        <div class='col-12'>PlayList</div>
- 
-//         </div> 
-        
-//         </nav>
-//     </div>
-//     </PlayerContextProvider>
-//   );
-// }
-
-
-
-// function App(){
-// return(
-//   <div className="container-fluid font-apple color-bg-s">
-// <HomePage />
-// </div>)
-// }
-
-// export default App;

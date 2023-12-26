@@ -1,0 +1,36 @@
+
+
+{%block content%}
+<div class="sz-24 color-p my-3">
+    Your Playlist
+</div>
+<br />
+{%for playlist in playlists%}
+<div class="row">
+	<div class="col-md-1 col-sm-2">
+		<div class="row m-0 p-0">
+			{% if playlist.music.all >= 4 %}
+			{%for music in playlist.music.all|slice:':4'%}
+					<img src="{{music.cover_photo.url}}" class="col-6 m-0 p-0" style="margin:0;padding:0;display:inline-block;object-fit:cover;"/>
+			{%endfor%}
+			{%else%}
+			<div class="">
+				<i class="fas fa-music sz-36"></i>
+			</div> 
+			{%endif%}
+		</div>
+	</div>
+    <div class="col sz-18">
+        <a class="no-decoration color-black" href="{%url 'PlayListDetailUrl' playlist.id %}">
+            {{playlist.name|title}}
+        </a>
+        <div class="sz-14 color-grey">
+        featured music : {%for music in playlist.music.all|slice:':3'%} {{music.title}}, 
+	{%endfor%}
+    </div>
+    </div>
+    
+</div>
+<br/>
+{%endfor%}
+{%endblock%}

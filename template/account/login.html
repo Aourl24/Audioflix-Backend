@@ -1,0 +1,129 @@
+
+{%extends 'base.html'%}
+{%load static%}
+{%load socialaccount%}
+{%block header%}
+
+{%endblock%}
+
+{%block navbar%}
+{%endblock%}
+
+{%block sidebar%}
+
+{%endblock%}
+{%block content%}
+
+{%block index%}
+
+{%endblock%}
+<style>
+body{
+    background-color: white;
+}
+input{
+    height: 1.1cm;
+}
+.center-body{
+      background:url("{%static 'images/titan.jpg'%}");
+      background-repeat: no-repeat;
+  background-size: cover; /* or 'contain' based on your preference */
+  background-position:right; /* optional, centers the background */
+  background-color: black;
+}
+</style>
+
+<div class='' style=''>
+    <div class="font-great sz-36 center p-3"> Audio-Flix </div>
+    <div class='row rounded p-2 justify-content-center' style=''>
+        <div class='col-md-6 col-sm-12 p-3 rounded color-white'>
+            <div class='row'>
+                <div class='col'>
+                    <h2 style='' class=' sz-30 color-p'>
+                        Login
+                     </h2>
+                </div>
+            </div>
+
+            <form method='post'>
+                {%csrf_token%}
+
+                            {%if form.errors %}
+                            <p class='warning'>Invalid Username or Password</p>
+                            {%endif%}
+
+
+                    {% for field in form %}
+                        {%if field.label == 'Remember Me' %}
+                        {%else%}
+
+
+                             {{field.errors}}
+                            <div class='row my-3'>
+                                <div class='col sz-14 bold'>
+                                    {{field.label}}
+                                </div>
+                            </div>
+                             <div class='row my-3' >
+                                <div class='col col-sm'>
+                                    {{ field.as_widget }}
+                                </div>
+                            </div>
+
+                        {%endif%}
+                    {% endfor %}
+                    <br />
+                    <div class='row my-3'>
+                        <div class='col col-sm-12'>
+                                <button class='btn btn-block color-bg-p color-white adjust sz-18 w-100'>
+                                    Log In
+                                </button>
+                        </div>
+                    </div>
+                    <div class='row my-2'>
+                        <div class='col center'>
+                            <a class='color-p' href="{% url 'account_reset_password'%}" style=''>
+                            Forget Password
+                            </a>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="w-100"></div>
+        <div class='col-md-6 col-sm-12 p-3 rounded '>
+
+            <div class="row">
+                <div class="col">
+                    <a href="{% provider_login_url 'google' %}" class='btn border p-2 sz-18 rounded btn-block w-100'>
+                        <i class='fab fa-google text-danger'></i> Login with Google
+                    </a>
+                <div>
+            </div>
+            <br/>
+            <div class='row my-2 center'>
+                <div class='col'>
+                    If you don't  have an account
+                </div>
+            </div>
+            <div class='row my-2 center'>
+                <div class='col'>
+                    <a class='btn btn-danger sz-18 color-white w-100' href="{% url 'account_signup'%}" style='baground-color:357417'>
+                        Sign Up
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<br />
+<br />
+<script>
+$(window).on('load',function(){
+    $('input').addClass('form-control')
+})
+
+</script>
+{%endblock%}
+
+

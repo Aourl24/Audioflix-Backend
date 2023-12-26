@@ -9,81 +9,174 @@
     <link rel='stylesheet' href="{%static 'css/fontawesome_5/css/all.min.css'%}" media="print" onload="this.media='all'">
 
     <link rel='stylesheet' href="{%static 'css/animate.min.css'%}">
-
+    <script type="text/javascript" src="{%static 'js/htmx.min.js'%}"></script>
 	<script src="{%static 'js/react.production.min.js'%}"></script>
 	<script type="text/javascript" src="{%static 'js/react-dom.production.min.js'%}"></script>
+	<script src="{%static 'js/react-router.production.min.js'%}"></script>
+	<script src="{%static 'js/react-router-dom.min.js'%}"></script>
 	<script src="{%static 'js/babel.min.js'%}"></script>
 	<script type="text/javascript" src="{%static 'js/axios.min.js'%}"></script>
+	
+	<script type="text/javascript" src="{%static 'js/jquery.min.js'%}"></script>
+
 	 <link rel='stylesheet' href="{%static 'css/acss/acss.css'%}">
 
 </head>
 <style>
 :root{
-	--primary-color:blue;
+	--primary-color:darkred;
 	--secondary-color:black;
+	--tertiary-color:#F5D0D0;
 }
+
+a:focus{
+	color:grey;
+}
+
+.btn:focus{
+	color:grey;
+}
+
+adjust:focus{
+	background-color:grey!important;
+}
+
+adjust:hover{
+	background-color:grey!important;	
+}
+
+@media(max-width:600px){
+.playerBottom{
+	bottom:65px;
+}
+}
+
+@media(min-width:600px){
+.playerBottom{
+	bottom:15px;
+}
+.shiftMargin{
+	margin-left:20%
+}
+}
+
+.fixed-column {
+      position: fixed;
+      height: 100%;
+      overflow-y: auto;
+    }
+
 </style>
-<body class="bg-light">
+<body class="font-adventor">
 
-
-<div class="navbar p-2">
-	<div class="navbar-brand sz-20 color-black bold">AudioFlix</div>
-	<div class="navbar-brand color-white hide" onClick="show()"><i class="fas fa-bars"></i></div>
+{%block header%}
+<div class="navbar p-2 hide">
+	<div class="navbar-brand sz-20 color-black bold font-great"><i class="display-md-none fas fa-bars"  onclick="show()"></i> AudioFlix</div>
+	<div class="navbar-brand color-white hide" onClick="show()"><i class="fas fa-bars display-md-none"></i></div>
 </div>
-<br />
+{%endblock%}
 
 <div class="container-fluid">
-<div class="row sz-24 ">
-<div class="col-md-1 bold h-100 display-sm-none col-sm-3 " id="drop">
+<div class="row">
+
+	{%block sidebar%}
+<div class="col-md-2 h-100 display-sm-none col-sm-3 sz-14 color-bg-t fixed-top" id="drop">
 	<br />
-	<div class="row my-2 p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-bd-p color-p p-2" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i></a> </div>
+	<div class="position-fixed h-100" style="borde-right: 2px solid silver;">
+	<div class="row my-2 p-2 sz-24">
+		<div class="col bold color-grey">
+			AudioFlix
+		</div>
 	</div>
 	<div class="row my-2 p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'ExploreUrl' %}"><i class="far fa-compass"></i></a></div>
+		<div class="col" title="add playlist"><a class="no-decoration rounded color-black color-bd-p p-2" href="{%url 'CreatePlayListUrl'%}"> Create Playlist </a> </div>
 	</div>
-	<div class="row my-2 hide">
+	<div class="row my-2 p-2">
+		<div class="col"><a class="no-decoration rounded color-black p-2" hx-get="{%url 'PlayListView' %}" hx-target="#main" href="{%url 'PlayListView' %}"> My Playlist </a></div>
+	</div>
+	<div class="row p-2 my-2">
+		<div class="col"><a class="no-decoration rounded color-black p-2" href="{%url 'HomeUrl'%}">
+			Home</a> </div>
+	</div>
+	<div class="row p-2 my-2">
+		<div class="col"><a class="no-decoration rounded color-black p-2" href="{%url 'ExploreUrl' %}">
+			Explore</a></div>
+	</div>
+	<div class="my-2 hide">
 		<div class="col">Library</div>
 	</div>
-	<div class="row my-2 p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i></a></div>
+	<div class="row p-2 my-2">
+		<div class="col"><a class="no-decoration rounded color-black p-2"  hx-get="{%url 'SearchUrl'%}" hx-target="#main" href="{%url 'SearchUrl'%}">
+		 Search </a></div>
+		
 	</div>
 </div>
+</div>
+{%endblock%}
 
-<div class="navbar fixed-bottom color-bg-white display-md-none">
+{%block navbar%}
+<div class="navbar fixed-bottom color-bg-white display-md-none sz-24 shadow-md">
 <div class="p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-bd-p color-p p-2" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i></a> </div>
+		<div class="col center"><a class="no-decoration rounded-circle color-bd-p color-p" href="{%url 'HomeUrl'%}"><i class="fas fa-home"></i>
+			<div class="sz-12 color-p col-12"> Home </div></a> </div>
 	</div>
 	<div class="p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'ExploreUrl' %}"><i class="far fa-compass"></i></a></div>
+		<div class="col center"><a class="no-decoration rounded-circle color-p" href="{%url 'ExploreUrl' %}"><i class="far fa-compass"></i>
+			<div class="sz-12 color-p col-12"> Explore </div></a></div>
 	</div>
 	<div class="my-2 hide">
 		<div class="col">Library</div>
 	</div>
 	<div class="p-2">
-		<div class="col"><a class="no-decoration rounded-circle color-p p-2" href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i></a></div>
+		<div class="col center"><a class="no-decoration rounded-circle color-p " href="{%url 'SearchUrl'%}"><i class="fas fa-search"></i>
+		<div class="sz-12 color-p col-12"> Search </div></a></div>
+		
 	</div>
 </div>
+{%endblock%}
 
-<div class="col" id="main">
+<div class="col p-4 shiftMargin" style="">
+<div id="main">
 {%block content%}
-
+<div class="d-flex w-100 justify-content-center align-items-center py-3">
+<div class="spinner-border"></div>
+</div>
 {%endblock%}
 </div>
 
+{%block other%}
+
+{%endblock%}
+<div id="player" class=""></div>
+</div>
 </div>
 </div>
 
+<br />
+<br />
+<br />
 {%static 'js/src' as path%}
 <script type="text/babel" src="{%static 'js/src/main.js'%}"></script>
 <script type="text/babel" src="{{path}}/{%block src%}{%endblock%}"></script>
 
 {%block mount%}
 <script type="text/babel">
+
+/*const rt = document.getElementById('player');
+ReactDOM.render(<Media />,rt)
+*/
 const root = document.getElementById('main');
-ReactDOM.render(<App />,root)
+ReactDOM.render(<PlayerContextProvider><App /></PlayerContextProvider>,root);
+
+
 </script>
 {%endblock%}
+
+<script type="text/babel">
+const rt = document.getElementById('player');
+ReactDOM.render(<Media />,rt)
+</script>
+
 <script>
 function show(){
 	var doc = document.getElementById('drop')

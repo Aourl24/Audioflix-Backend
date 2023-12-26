@@ -57,6 +57,10 @@ button:focus{
     background-color: ;
 }
 
+body{
+font-size: 13px;
+}
+
 .bold {
     font-weight: bold;
 }
@@ -167,15 +171,15 @@ button:focus{
 }
 
 .color-bg-brown {
-    color: brown;
+    background-color: brown;
 }
 
 .color-bg-silver {
-    color: silver;
+    background-color: silver;
 }
 
 .color-bg-grey {
-    color: grey;
+    background-color: grey;
 }
 
 .color-p{
@@ -506,6 +510,10 @@ button:focus{
 }
 
 @media(max-width:600px) {
+    body{
+font-size: 14px;
+}
+
     .display-sm-none {
         display: none;
     }

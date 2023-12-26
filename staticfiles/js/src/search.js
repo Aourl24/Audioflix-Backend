@@ -1,6 +1,6 @@
 function App(){
 	let value = React.useRef()
-	let [musicList,setMusicList] = React.useState([{}])
+	let [musicList,setMusicList] = React.useState(null)
 	
 	let getResult = async()=>{
 		let searchValue = value.current.value
@@ -8,6 +8,7 @@ function App(){
 		setMusicList(response.data)
 	}
 
+	
 	return(
 	<PlayerContextProvider>
 	<div>
@@ -17,7 +18,7 @@ function App(){
 	<br />
 	Search Results
 	<br />
-	<MusicBox items={musicList} />
+	{musicList && <MusicBox items={musicList} />}
 	</div>
 	</PlayerContextProvider>
 	)

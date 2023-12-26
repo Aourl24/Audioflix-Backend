@@ -1,5 +1,5 @@
 function App(){
-let [musicList, setMusicList] = React.useState([{}])
+let [musicList, setMusicList] = React.useState(null)
 let [playList,setPlayList] = React.useState([])
 let [poster, setPoster] = React.useState([])
 let [count,setCount] = React.useState(0)
@@ -26,13 +26,15 @@ React.useEffect(()=>
 return(
 	<PlayerContextProvider>
 	<div>
-		<div class="color-p bold sz-18">Explore All music Here</div>
-		<br />
+	<div class="sticky-top p-2 color-bg-white">
+		<h2 class="color-p color-p colo-white rounded">Explore All music </h2>
+	</div>		
 
-		{poster.length > 0 ? <img class="img-fluid w-100" style={{height:'300px',objectFit:'cover',objctPosition:'top'}} src={poster[count].img} />: null }
-		<MusicBox items={musicList} />
-		<br />
-		{playList.map((x)=> <PlayList items={x} />)}
+		{musicList ? <MusicBox items={musicList} title="Trending Songs" /> :'' }
+		
+		<div class="row" style={{overflow:'auto'}}>
+		{playList && playList.map((x)=><div class="col-sm col-md-6"> <PlayList items={x} /></div>)}
+		</div>
 	</div>
 	</PlayerContextProvider>
 	)

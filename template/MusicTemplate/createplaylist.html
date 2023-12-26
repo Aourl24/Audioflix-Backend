@@ -1,0 +1,12 @@
+{%extends 'base.html'%}
+
+{%block content%}
+<h2>Create your PlayList Here</h2>
+
+<form method="post">
+	{%csrf_token%}
+{{form.as_p}}
+
+<p><button class="btn color-bg-p sz-16 color-white">Create PlayList </button></p>
+</form>
+{%endblock%}

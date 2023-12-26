@@ -1,0 +1,38 @@
+<div class="p-2 border rounded pp{{music.id}}" id="addtoplaylistPop">
+    <div class="row my-2 hide">
+        <div class="col color-p sz-20">
+            {{music.title}}
+        </div>
+    </div>
+    <div class="sz-18 row">
+        <div class="col">
+            select playist
+        </div>
+    </div>
+    <form hx-post="{%url 'AddToPlayList' music.id%}" method="post">
+        {%csrf_token%}
+        <select class="form-control sz-16" name="playlist">
+            {%for playlist in playlists%}
+            <div class="col-12">
+                <option value="{{playlist.id}}">
+                    {{playlist.name}}
+                </option>
+            </div>
+            {%endfor%}
+        </select>
+        <div class="row my-2">
+            <div class="col">
+                <button class="btn sz-16 w-100 color-bg-p color-white">
+                    Select
+                </button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-danger w-100 sz-16" onclick="$('.pp{{music.id}}').addClass('hide')">
+                close tab
+            </button>
+        </div>
+    </div>
+</div>
