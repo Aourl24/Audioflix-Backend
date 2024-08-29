@@ -25,7 +25,7 @@ def getUser(x):
 @api_view(['GET'])
 def musicApiView(request):
 	music = Music.objects.all()
-	serializer = MusicSerializer(music,many=True) 
+	serializer = MusicSerializer(music,many=True,context=request) 
 	return Response(serializer.data)
 
 @api_view(['GET'])
@@ -96,8 +96,9 @@ def searchView(request):
 @api_view(['GET'])	
 def searchApi(request,param):
 	music = Music.objects.filter(title__icontains=param)
-	serializer = MusicSerializer(music,many=True)
+	serializer = MusicSerializer(music,many=True,context=request)
 	return Response(serializer.data)
+
 
 @api_view(['GET'])
 def addToHistoryView(request,id):

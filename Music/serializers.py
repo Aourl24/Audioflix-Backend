@@ -21,6 +21,9 @@ class ArtistSerializer(serializers.ModelSerializer):
 
 class MusicSerializer(serializers.ModelSerializer):
 	artist = ArtistSerializer()
+	cover_photo = serializers.SerializerMethodField()
+	file = serializers.SerializerMethodField()
+
 	class Meta:
 		model = Music
 		fields= '__all__'
@@ -28,7 +31,16 @@ class MusicSerializer(serializers.ModelSerializer):
 	def to_representation(self,instance):
 		rep = super().to_representation(instance)
 		rep['artist'] = instance.artist.name
-		return rep 
+		return rep
+
+	def get_cover_photo(self,obj):
+		 request = self.context
+		 return request.build_absolute_uri(obj.cover_photo.url)
+
+	def get_file(self,obj):
+		request = self.context
+		return request.build_absolute_uri(obj.file.url)
+
 
 class PlayListSerializer(serializers.ModelSerializer):
 	music = MusicSerializer(many=True)
