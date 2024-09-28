@@ -24,14 +24,14 @@ def getUser(x):
 
 @api_view(['GET'])
 def musicApiView(request):
-	music = Music.objects.all()
+	music = Music.objects.all().order_by("?")[:5]
 	serializer = MusicSerializer(music,many=True,context=request) 
 	return Response(serializer.data)
 
 @api_view(['GET'])
 def playListDetail(request,id,api=None):
 	playlist = PlayList.objects.get(id=id)
-	serializer = PlayListSerializer(playlist)
+	serializer = PlayListSerializer(playlist,context=request)
 	if api:
 		return Response(serializer.data)
 	else:
@@ -39,9 +39,12 @@ def playListDetail(request,id,api=None):
 
 
 @api_view(['GET'])
-def playListView(request):
-	playlists = PlayList.objects.all()
-	serializer = PlayListSerializer(playlists,many=True)
+def playListView(request,all=None):
+	if all:
+		playlists = PlayList.objects.all()
+	else:
+		playlists = PlayList.objects.all().order_by("?")[:8]
+	serializer = PlayListSerializer(playlists,many=True,context=request)
 	return Response(serializer.data)
 
 @login_required
@@ -76,7 +79,7 @@ def playListApi(request,user=None):
 		playlist = PlayList.objects.filter(profile=getUser(request.user))
 	else:
 		playlist = PlayList.objects.filter(profile=getUser(user))
-	serializer = PlayListSerializer(playlist,many=True)
+	serializer = PlayListSerializer(playlist,many=True,context=request)
 	return Response(serializer.data)
 
 @login_required
@@ -95,7 +98,9 @@ def searchView(request):
 
 @api_view(['GET'])	
 def searchApi(request,param):
-	music = Music.objects.filter(title__icontains=param)
+	title_search = Music.objects.filter(title__icontains=param)
+	artist_search = Music.objects.filter(artist__name__icontains=param)
+	music = title_search.union(artist_search)
 	serializer = MusicSerializer(music,many=True,context=request)
 	return Response(serializer.data)
 

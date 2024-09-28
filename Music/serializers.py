@@ -43,10 +43,24 @@ class MusicSerializer(serializers.ModelSerializer):
 
 
 class PlayListSerializer(serializers.ModelSerializer):
-	music = MusicSerializer(many=True)
+	#music = MusicSerializer(many=True,context=self.context)
+	cover_photo = serializers.SerializerMethodField()
 	class Meta:
 		model = PlayList
 		fields = '__all__'
+
+	def get_cover_photo(self,obj):
+		 request = self.context
+		 return request.build_absolute_uri(obj.cover_photo.url)
+
+	def to_representation(self,instance):
+		rep = super().to_representation(instance)
+		music =  MusicSerializer(instance.music.all(),many=True,context=self.context) 
+		rep['music'] = music.data#[x.title for x in instance.music.all()]
+		return rep
+
+
+
 
 class MusicHistorySerializer(serializers.ModelSerializer):
 	profile =ProfileSerializer()

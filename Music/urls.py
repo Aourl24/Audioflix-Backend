@@ -4,7 +4,8 @@ from .views import musicApiView, playListView, playListDetail, homeView ,musicHi
 urlpatterns = [
 	path('musicapi',musicApiView,name="MusicApiUrl"),
 	path('playlistviewapi',playListView,name="PlayListApiUrl"),
-	path('playlistdetail<int:id>',playListDetail,name="PlayListDetailUrl"),
+	path('playlistviewapi/<str:all>',playListView,name="PlayListApiUrl"),
+	path('playlistdetail/<int:id>',playListDetail,name="PlayListDetailUrl"),
 	path('home',homeView,name="HomeUrl"),
 	path('history',musicHistoryApi,name="HistoryApi"),
 	path('likesongs',likeSongApi,name="LikeSongApi"),
@@ -16,7 +17,7 @@ urlpatterns = [
 	path('poster',posterView),
 	path('likesong<int:id>',likeSong),
 	path('checklike<int:id>/<str:check_like>',likeSong),
-	path('playlist<int:id>/<str:api>',playListDetail,name="PlayListUrl"),
+	path('playlist/<int:id>/<str:api>',playListDetail,name="PlayListUrl"),
 	path('profile',profileApi,name="ProfileApi"),
 	path('createplaylist',createPlayList,name="CreatePlayListUrl"),
 	path('myplaylist',playListsView,name="PlayListView"),
