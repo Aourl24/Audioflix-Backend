@@ -9,7 +9,15 @@ from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.utils import timezone
 from .forms import PlayListForm
+from django.core.cache import cache
+from django.core.paginator import Paginator
+from .api import api_headers
+import requests
 # Create your views here.
+
+# data = {
+#     'grant_type': 'refresh',
+# }
 
 def template(x):
 	return f"MusicTemplate/{x}"
@@ -17,16 +25,37 @@ def template(x):
 def getUser(x):
 	return Profile.objects.get(user=User.objects.get(username=x))
 
+
+def getData(url):
+    response = requests.post(url,headers = api_headers)
+    if response.status_code == 200:
+    	res = response.json()
+    	return res
+    else:
+    	print('Error:', response.status_code, response.text)
+    return
+
 # @api_view(['GET'])
 # def getUserView(request):
 # 	user =lambda x: if request.user else 'Anonymous'
 # 	return HttpResponse(user)
 
 @api_view(['GET'])
-def musicApiView(request):
-	music = Music.objects.all().order_by("?")[:5]
+def musicApiView(request,refresh=None):
+	cache_key = "music_api"
+	cached_data = cache.get(cache_key)
+	if not refresh and cached_data:
+		return Response(cached_data)
+	# res = getData( 'http://api.spotify.com/v1/tracks?market=NG&ids=7ouMYWpwJ422jRcDASZB7P%2C4VqPOruhp5EdPBeR92t6lQ%2C2takcwOaAZWiXQijPHIx7B')
+	# #{"artist":[{'name'}],"id":"","href":"","name":"","preview_url":"","uri":"","album":{"images":[{"url":}]}}
+	# convert = [{"id":x["id"],"cover_photo": x["album"]["images"][0]["url"], "title": x["name"], "artist": x['artists'][0]["name"],"file": x["external_urls"]['spotify']} for x in res["tracks"]]
+
+
+	music = Music.objects.all().order_by("?")[:7]
 	serializer = MusicSerializer(music,many=True,context=request) 
-	return Response(serializer.data)
+	# all_music = list(serializer.data) + convert
+	cache.set(cache_key,serializer.data,timeout=10 * 10)
+	return  Response(serializer.data)
 
 @api_view(['GET'])
 def playListDetail(request,id,api=None):
@@ -39,13 +68,20 @@ def playListDetail(request,id,api=None):
 
 
 @api_view(['GET'])
-def playListView(request,all=None):
-	if all:
-		playlists = PlayList.objects.all()
+def playListView(request,page):
+	cache_key = f"playlist_api"
+	cached_data = cache.get(cache_key)
+	if cached_data:
+		playlists = cached_data
 	else:
-		playlists = PlayList.objects.all().order_by("?")[:8]
-	serializer = PlayListSerializer(playlists,many=True,context=request)
-	return Response(serializer.data)
+		playlists = PlayList.objects.all().order_by("?")
+		cache.set(cache_key,playlists,timeout = 10 * 10)
+	paginator = Paginator(playlists,7)
+	page_playlists = paginator.get_page(page)
+	if page > paginator.num_pages:
+		return Response({'data':[]})
+	serializer = PlayListSerializer(page_playlists,many=True,context=request)
+	return Response({'data':serializer.data,'page':page_playlists.number,'has_next':page_playlists.has_next(),'pages':paginator.num_pages})
 
 @login_required
 @api_view(['GET'])

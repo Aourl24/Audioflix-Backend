@@ -3,8 +3,9 @@ from .views import musicApiView, playListView, playListDetail, homeView ,musicHi
 
 urlpatterns = [
 	path('musicapi',musicApiView,name="MusicApiUrl"),
-	path('playlistviewapi',playListView,name="PlayListApiUrl"),
-	path('playlistviewapi/<str:all>',playListView,name="PlayListApiUrl"),
+	path('musicapi/<str:refresh>',musicApiView,name="MusicApiUrl"),
+	#path('playlistviewapi',playListView,name="PlayListApiUrl"),
+	path('playlistviewapi/<int:page>',playListView,name="PlayListApiUrl"),
 	path('playlistdetail/<int:id>',playListDetail,name="PlayListDetailUrl"),
 	path('home',homeView,name="HomeUrl"),
 	path('history',musicHistoryApi,name="HistoryApi"),
